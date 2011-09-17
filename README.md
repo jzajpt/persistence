@@ -4,14 +4,23 @@ Persistence is simple & stupid gem that takes care of loading, saving
 and materializing objects from persistence backend (MongoDB).
 
 The main idea behind Persistence module is to use pure Ruby
-objects that can be persisted using this Persistence module.
+objects that can be persisted and loaded again. This module
+acts as a separate layer from your domain objects and it
+should hopefully let you focus more on logic of you app and
+keep database out of the way (for the most part).
 
 
 ## Initializing Persistence module
 
-Persistence uses only one collection to store objects.
+Persistence uses only one MongoDB collection to store all objects so
+it's necessary to specify database and collection names.
 
     Persistence.init_persistence(database: 'persistence_database', collection: 'persistence_collection')
+
+Or you can initialize Persistence from YAML file (the first argument is
+path to YAML file, the second one is desired environment):
+
+    Persistence.init_from_yml('path/to/config/persistence.yml', 'development')
 
 
 ## Using Persistence to save objects
@@ -36,6 +45,7 @@ have to provide it # in `#to_resource` method).
     Persistence.save p1
     # Resource to backend: { _id: '4e649938aabc604f08000001', _type: 'Person', name: 'Jonny D' }
     p p1.id # => BSON::ObjectId('4e649938aabc604f08000001')
+
 
 ## Using Persistence to load persisted objects
 
@@ -66,7 +76,6 @@ It means Persistence returns one object reference for each persisted document.
 
 
 ## Copyright
-
 
 Copyright (c) 2011 Jiri Zajpt, <jz@blueberry.cz>
 
