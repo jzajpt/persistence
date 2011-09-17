@@ -9,6 +9,8 @@ module Persistence
     attr_accessor :identity_map
 
     # Called when module is extended on another.
+    #
+    # @param [Class, Module] base Receiver class or module
     def self.extended(base)
       base.reset
     end
@@ -22,18 +24,6 @@ module Persistence
         hash = self.adapter.resource(id)
         self.materialize(id, hash) if hash
       end
-    end
-
-    # Finds the learning object by given ID.
-    #
-    # @param [BSON::ObjectID] id
-    # @param [Object] Materialized object
-    def with_keyword(keyword)
-      self.adapter.resources_with_keyword(keyword).map do |hash|
-        self.from_identity_map_or(hash['_id']) do
-          self.materialize(hash['_id'], hash)
-        end
-      end.compact
     end
 
     # Returns the array with all learning objects.
@@ -83,6 +73,12 @@ module Persistence
       end
     end
 
+    # Tries to load given resource from identity map or
+    # calls given block.
+    #
+    # @param [BSON::ObjectId] id Object id
+    # @return Given object from identity map or return value of given
+    # block
     def from_identity_map_or(id, &block)
       if self.identity_map.has_key?(id)
         self.identity_map[id]

@@ -127,29 +127,4 @@ describe Persistence::Load do
 
   end
 
-  describe '#with_keyword' do
-
-    let(:ids)              { 6.times.map { BSON::ObjectId.new } }
-    let(:persisted_hashes) { 6.times.map { { '_type' => "PersistenceTestObject" } } }
-    let(:adapter)          { double('Adapter') }
-    let(:instance)         { double("PersistenceTestObject", assign: nil, assign_id: nil) }
-
-    before do
-      adapter.stub(:resources_with_keyword).and_return(persisted_hashes)
-      persistence.stub(:adapter) { adapter }
-      PersistenceTestObject.stub(:new) { instance }
-    end
-
-    it 'loads resource hash from adapter' do
-      adapter.should_receive(:resources_with_keyword).with('ohai').and_return(persisted_hashes)
-      persistence.with_keyword('ohai')
-    end
-
-    it 'materializes each object' do
-      persistence.should_receive(:materialize).exactly(6).times
-      persistence.with_keyword('ohai')
-    end
-
-  end
-
 end
