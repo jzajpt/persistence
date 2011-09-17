@@ -8,7 +8,10 @@ module Persistence
     #
     # @param [BSON::ObjectID, string] id Resource ID
     def destroy(id)
-      self.adapter.destroy_resource(id)
+      if self.adapter.destroy_resource(id)
+        self.identity_map.delete(id)
+        id
+      end
     end
 
   end
