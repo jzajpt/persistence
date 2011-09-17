@@ -55,6 +55,16 @@ from backend.
     p book.author # => "Jonny D"
 
 
+## Identity map
+
+Each persisted object is materialized only once thanks to Persistence Identity Map.
+It means Persistence returns one object reference for each persisted document.
+
+    first = Persistence.find('4e649938aabc604f08000001')
+    second = Persistence.find('4e649938aabc604f08000001')
+    first.equal?(second) # true, false with ActiveRecord
+
+
 ## Copyright
 
 
