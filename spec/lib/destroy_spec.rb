@@ -4,13 +4,12 @@ require 'spec_helper'
 
 describe Persistence::Destroy do
 
-  let(:persistence_class) do
+  let(:persistence) do
     Class.new do
-      include Persistence::Base
-      include Persistence::Destroy
+      extend Persistence::Base
+      extend Persistence::Destroy
     end
   end
-  let(:persistence) { persistence_class.new }
 
   describe '#destroy' do
 

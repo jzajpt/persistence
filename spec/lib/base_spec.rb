@@ -4,12 +4,11 @@ require 'spec_helper'
 
 describe Persistence::Base do
 
-  let(:persistence_class) do
+  let(:persistence) do
     Class.new do
-      include Persistence::Base
+      extend Persistence::Base
     end
   end
-  let(:persistence) { persistence_class.new }
 
   describe '#init_from_yaml' do
 
@@ -22,14 +21,14 @@ describe Persistence::Base do
 
     it 'loads YAML file' do
       YAML.should_receive(:load_file).with(file_name).and_return("test" => {})
-      persistence.init_from_yml(file_name)
+      persistence.init_from_yml(file_name, 'test')
     end
 
     it "calls #init_persistence method" do
       hash = { host: 'localhost', database: 'test' }
       YAML.stub(:load_file).and_return("test" => hash)
       persistence.should_receive(:init_persistence).with(hash)
-      persistence.init_from_yml(file_name)
+      persistence.init_from_yml(file_name, 'test')
     end
 
   end

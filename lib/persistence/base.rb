@@ -13,8 +13,9 @@ module Persistence
     # Initializes persistence from given YAML file.
     #
     # @param [String] file_name File name with YAML config file
-    def init_from_yml(file_name)
-      config_hash = YAML.load_file(file_name)[Rails.env]
+    def init_from_yml(file_name, environment = nil)
+      environment ||= 'development'
+      config_hash = YAML.load_file(file_name)[environment]
       raise ArgumentError unless config_hash
       self.init_persistence(config_hash.symbolize_keys)
     end

@@ -4,13 +4,12 @@ require 'spec_helper'
 
 describe Persistence::Save do
 
-  let(:persistence_class) do
+  let(:persistence) do
     Class.new do
-      include Persistence::Base
-      include Persistence::Save
+      extend Persistence::Base
+      extend Persistence::Save
     end
   end
-  let(:persistence) { persistence_class.new }
 
   describe '#save' do
 
