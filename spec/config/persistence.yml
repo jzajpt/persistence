@@ -1,5 +1,0 @@
-test:
-  host: 'localhost'
-  database: 'eusophos2_test'
-  collection: 'learning_objects'
-

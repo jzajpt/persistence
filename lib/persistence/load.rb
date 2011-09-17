@@ -15,7 +15,7 @@ module Persistence
       base.reset
     end
 
-    # Loads the learning object by given ID.
+    # Loads the object by given ID.
     #
     # @param [BSON::ObjectID] id
     # @param [Object] Materialized object
@@ -26,9 +26,9 @@ module Persistence
       end
     end
 
-    # Returns the array with all learning objects.
+    # Returns the array with all objects.
     #
-    # @return [Array] The array with learning objects.
+    # @return [Array] The array with objects.
     def all
       self.adapter.resources.map do |hash|
         self.from_identity_map_or(hash['_id']) do
