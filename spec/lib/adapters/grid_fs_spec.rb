@@ -4,10 +4,10 @@ require 'spec_helper'
 
 describe Persistence::Adapters::GridFs do
 
-  let(:db_adapter) { Persistence.adapter }
-  let(:adapter)    { Persistence::Adapters::GridFs.new(database: db_adapter.database) }
-  let(:db)         { adapter.database }
-  let(:original_file) { File.new(File.join(File.dirname(__FILE__), "/../fixtures/file.txt")) }
+  let(:db_adapter)    { Persistence.adapter }
+  let(:adapter)       { Persistence::Adapters::GridFs.new(database: db_adapter.database) }
+  let(:db)            { adapter.database }
+  let(:original_file) { File.new(File.join(File.dirname(__FILE__), '/../../fixtures/file.txt')) }
 
   describe "#push_file" do
 
