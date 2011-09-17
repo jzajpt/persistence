@@ -15,11 +15,11 @@ module Persistence
       base.reset
     end
 
-    # Finds the learning object by given ID.
+    # Loads the learning object by given ID.
     #
     # @param [BSON::ObjectID] id
     # @param [Object] Materialized object
-    def find(id)
+    def load(id)
       self.from_identity_map_or(id) do
         hash = self.adapter.resource(id)
         self.materialize(id, hash) if hash

@@ -14,7 +14,7 @@ describe Persistence::Load do
     end
   end
 
-  describe '#find' do
+  describe '#load' do
 
     let(:id)             { BSON::ObjectId.new }
     let(:persisted_hash) { { '_type' => 'PersistenceTestObject', '_id' => id, 'key_a' => 'a', 'key_b' => 'b' } }
@@ -29,7 +29,7 @@ describe Persistence::Load do
 
       it 'loads resource hash from adapter' do
         adapter.should_receive(:resource).with(id).and_return(persisted_hash)
-        persistence.find(id)
+        persistence.load(id)
       end
 
       context 'given valid ID' do
@@ -37,32 +37,32 @@ describe Persistence::Load do
         it 'materializes object based on _type attribute' do
           instance = PersistenceTestObject.new
           PersistenceTestObject.should_receive(:new).and_return(instance)
-          persistence.find(id)
+          persistence.load(id)
         end
 
         it 'assigns id to materialized object' do
-          object = persistence.find(id)
+          object = persistence.load(id)
           object.id.should eq(id)
         end
 
         it 'assigns values from hash to instance variables' do
-          object = persistence.find(id)
+          object = persistence.load(id)
           object.instance_variable_get(:"@key_a").should eq('a')
           object.instance_variable_get(:"@key_b").should eq('b')
         end
 
         it 'does not assign @_type' do
-          object = persistence.find(id)
+          object = persistence.load(id)
           object.instance_variable_get(:"@_type").should be_nil
         end
 
         it 'does not assign @_id' do
-          object = persistence.find(id)
+          object = persistence.load(id)
           object.instance_variable_get(:"@_id").should be_nil
         end
 
         it 'appends object to identity_map' do
-          object = persistence.find(id)
+          object = persistence.load(id)
           persistence.identity_map[id].should eq(object)
         end
 
@@ -72,7 +72,7 @@ describe Persistence::Load do
 
     context 'second run' do
 
-      let(:object) { persistence.find(id) }
+      let(:object) { persistence.load(id) }
 
       before do
         persistence.identity_map = { id => object }
@@ -80,11 +80,11 @@ describe Persistence::Load do
 
       it 'does not call persistence' do
         adapter.should_not_receive(:resource)
-        persistence.find(id)
+        persistence.load(id)
       end
 
       it 'returns object from internal hash' do
-        persistence.find(id).should equal(object)
+        persistence.load(id).should equal(object)
       end
 
     end
@@ -94,7 +94,7 @@ describe Persistence::Load do
       it 'returns nil' do
         wrong_id = BSON::ObjectId
         adapter.stub(:resource).with(wrong_id).and_return(nil)
-        persistence.find(wrong_id).should be_nil
+        persistence.load(wrong_id).should be_nil
       end
 
     end

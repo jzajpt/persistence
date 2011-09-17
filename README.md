@@ -60,8 +60,8 @@ from backend.
 
     # Resource stored in backend: { _id: '4e649938aabc604f08000001', _type: 'Book', author: 'Jonny D' }
 
-    book = Persistence.find
-    p book.id # => BSON::ObjectId('4e649938aabc604f08000001')
+    book = Persistence.load('4e649938aabc604f08000001')
+    p book.id # => BSON::ObjectId(
     p book.author # => "Jonny D"
 
 
@@ -70,8 +70,8 @@ from backend.
 Each persisted object is materialized only once thanks to Persistence Identity Map.
 It means Persistence returns one object reference for each persisted document.
 
-    first = Persistence.find('4e649938aabc604f08000001')
-    second = Persistence.find('4e649938aabc604f08000001')
+    first = Persistence.load('4e649938aabc604f08000001')
+    second = Persistence.load('4e649938aabc604f08000001')
     first.equal?(second) # true, false with ActiveRecord
 
 
