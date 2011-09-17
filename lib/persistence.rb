@@ -10,6 +10,10 @@ require 'persistence/save'
 require 'persistence/destroy'
 require 'persistence/files'
 
+if defined?(Rack)
+  require 'rack/persistence/identity_map'
+end
+
 
 module Persistence
 

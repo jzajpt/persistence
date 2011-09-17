@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'rack'
 require 'persistence'
 
 spec_root = File.dirname(__FILE__)
