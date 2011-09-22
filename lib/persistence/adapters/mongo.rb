@@ -39,12 +39,12 @@ module Persistence
         self.collection.find.to_a
       end
 
-      # Returns persisted documents with given keyword
+      # Returns persisted documents matching to given criteria.
       #
+      # @param [Hash] Criteria
       # @return [Array] Array of matched hashes
-      def resources_with_keyword(keyword)
-        escaped = Regexp.escape(keyword)
-        self.collection.find(keywords: /#{escaped}/i)
+      def find(criteria)
+        self.collection.find(criteria).to_a
       end
 
       # Inserts a new object into collection

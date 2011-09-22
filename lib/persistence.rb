@@ -5,6 +5,8 @@ require 'bson'
 
 require 'persistence/version'
 require 'persistence/base'
+require 'persistence/criteria'
+require 'persistence/iterator'
 require 'persistence/load'
 require 'persistence/save'
 require 'persistence/destroy'
@@ -22,5 +24,6 @@ module Persistence
   extend Save
   extend Destroy
   extend Files
+  extend Criteria
 
 end

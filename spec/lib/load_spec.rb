@@ -127,4 +127,8 @@ describe Persistence::Load do
 
   end
 
+  describe '#find' do
+
+  end
+
 end

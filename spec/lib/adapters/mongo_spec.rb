@@ -62,6 +62,25 @@ describe Persistence::Adapters::Mongo do
 
   end
 
+  describe "#find" do
+
+    before do
+      coll.remove
+      4.times { |i| coll.insert(number: i) }
+    end
+
+    context 'given matching condition' do
+
+      it "returns an array with matched hashes" do
+        array = adapter.find(number: 1)
+        array.should be_kind_of(Array)
+        array.size.should eq(1)
+      end
+
+    end
+
+  end
+
   describe "#insert_resource" do
 
     let(:hash) { { foo: 'bar', say: 'ohai' } }
