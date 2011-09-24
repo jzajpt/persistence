@@ -6,6 +6,10 @@ describe Persistence::Iterator do
 
   let(:iterator) { Persistence::Iterator.new }
 
+  it 'should include Enumerable module' do
+    Persistence::Iterator.included_modules.should include(Enumerable)
+  end
+
   describe 'Iterator methods' do
 
     it 'responds to select from Persistence::Iterator' do
@@ -20,6 +24,22 @@ describe Persistence::Iterator do
       hash = { foo: 'bar' }
       iterator = Persistence::Iterator.new(hash)
       iterator.criteria.should eq(hash)
+    end
+
+  end
+
+  describe '#each' do
+
+    let(:objects) { ['foo1', 'foo2', 'foo3'] }
+
+    before do
+      Persistence.adapter.stub(:find).and_return(objects)
+    end
+
+    it 'calls given block with each object' do
+      block = Proc.new {}
+      block.should_receive(:call).exactly(3).times
+      iterator.each(&block).to_a.should eq(objects)
     end
 
   end

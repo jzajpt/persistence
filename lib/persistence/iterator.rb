@@ -6,6 +6,8 @@ module Persistence
 
   class Iterator
 
+    include ::Enumerable
+
     include Criteria
 
     # Initializes iterator class.
@@ -13,6 +15,15 @@ module Persistence
     # @param [Hash] Criteria
     def initialize(criteria = {})
       self.criteria = criteria
+    end
+
+    # Yields block for each object in iterator.
+    #
+    # @param [Block] block Block to yield
+    def each(&block)
+      self.to_a.each do |object|
+        block.call(object)
+      end
     end
 
     # Convenience method signaling end of method chain.
