@@ -5,6 +5,7 @@ require 'bson'
 
 require 'persistence/version'
 require 'persistence/base'
+require 'persistence/factory'
 require 'persistence/criteria'
 require 'persistence/iterator'
 require 'persistence/load'

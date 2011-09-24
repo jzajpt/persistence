@@ -52,24 +52,8 @@ module Persistence
     def materialize(id, hash)
       type = hash.delete '_type'
       return unless type
-      klass = type.constantize
-      klass.new.tap do |object|
-        self.assign object, hash
+      Factory.new(type, hash).tap do |object|
         self.identity_map[id] = object
-      end
-    end
-
-    # Assigns given resource to given object.
-    #
-    # @param [Object] object Domain object
-    # @param [Hash] hash Resource hash from database
-    # @return [Object] Domain object
-    def assign(object, resource)
-      resource_id = resource.delete('_id')
-      object.instance_variable_set :"@id", resource_id if resource_id
-      resource.each do |key, value|
-        var_name = :"@#{key}"
-        object.instance_variable_set var_name, value
       end
     end
 
