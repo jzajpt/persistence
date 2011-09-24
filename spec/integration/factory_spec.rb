@@ -16,7 +16,7 @@ describe Persistence::Factory do
   describe '#new' do
 
     it 'uses tmp ID to store object in identity map' do
-      book = Persistence::Factory.new Book, author_name: 'Fyodor Dostoyevsky'
+      book = Factory Book, author_name: 'Fyodor Dostoyevsky'
       Persistence.load(book.id).object_id.should eq(book.object_id)
     end
 

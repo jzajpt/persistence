@@ -12,6 +12,7 @@ require 'persistence/load'
 require 'persistence/save'
 require 'persistence/destroy'
 require 'persistence/files'
+require 'factory'
 
 if defined?(Rack)
   require 'rack/persistence/identity_map'
