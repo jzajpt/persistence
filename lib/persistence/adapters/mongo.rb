@@ -29,14 +29,16 @@ module Persistence
       # @param [String, BSON::ObjectId] id The ID of document to return
       # @return [Hash] A hash of given document
       def resource(id = nil)
-        collection.find_one(self.to_id(id))
+        self.normalize(collection.find_one(self.to_id(id)))
       end
 
       # Returns all persisted documents
       #
       # @return [Array] Array of persisted hashes
       def resources
-        self.collection.find.to_a
+        self.collection.find.map do |hash|
+          self.normalize hash
+        end
       end
 
       # Returns persisted documents matching to given criteria.
@@ -44,7 +46,9 @@ module Persistence
       # @param [Hash] Criteria
       # @return [Array] Array of matched hashes
       def find(criteria)
-        self.collection.find(criteria).to_a
+        self.collection.find(criteria).map do |hash|
+          self.normalize hash
+        end
       end
 
       # Inserts a new object into collection
@@ -62,7 +66,7 @@ module Persistence
       def update_resource(id, new_doc)
         id = self.to_id(id)
         result = self.collection.update({ _id: id }, new_doc, safe: true)
-        if self.update_result_ok?(result)
+        if self.update_result_ok? result
           id
         else
           nil
@@ -92,6 +96,14 @@ module Persistence
       end
 
       protected
+
+      # Normalizes hash from Mongo
+      #
+      # @param [Hash] hash Hash to normalize
+      # @return [Hash] Normalized hash
+      def normalize(hash)
+        hash.symbolize_keys if hash
+      end
 
       # Checks if update result hash returned error or not.
       #

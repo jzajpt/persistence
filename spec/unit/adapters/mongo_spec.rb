@@ -16,13 +16,13 @@ describe Persistence::Adapters::Mongo do
 
       it "returns the hash of object with given id" do
         hash = adapter.resource(id)
-        hash['_type'].should eq('Richtext')
-        hash['_id'].should eq(id)
+        hash[:_type].should eq('Richtext')
+        hash[:_id].should eq(id)
       end
 
       it "doesn't mind string typed ID" do
         hash = adapter.resource("#{id}")
-        hash['_id'].should eq(id)
+        hash[:_id].should eq(id)
       end
 
     end
