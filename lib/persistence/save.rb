@@ -8,21 +8,39 @@ module Persistence
     #
     # @param [Object] object Domain object
     # @return [Object] Domain object
-    def save(object)
-      if self.was_persisted?(object)
-        self.persist_existing(object)
+    def save(object = nil)
+      if object
+        self.persist_object object
       else
-        self.persist_new(object)
+        self.persist_all
       end
     end
 
     protected
 
+    # Persist given object.
+    #
+    # @param [Object] object Domain object to persist
+    def persist_object(object)
+      if self.was_persisted?(object)
+        self.persist_existing_object(object)
+      else
+        self.persist_new_object(object)
+      end
+    end
+
+    # Persists all known objects.
+    def persist_all
+      self.identity_map.each do |id, object|
+        self.persist_object object
+      end
+    end
+
     # Persist existing object into database.
     #
     # @param [Object] object Domain object to persist
     # @return [Object] Domain object
-    def persist_existing(object)
+    def persist_existing_object(object)
       resource = self.object_to_resource(object)
       self.adapter.update_resource(object.id, resource)
       object
@@ -32,7 +50,7 @@ module Persistence
     #
     # @param [Object] object Domain object to persist
     # @return [Object] Domain object
-    def persist_new(object)
+    def persist_new_object(object)
       resource = self.object_to_resource(object)
       new_id = self.adapter.insert_resource(resource)
       if object.is_a?(Hash)

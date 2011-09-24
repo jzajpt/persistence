@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'rack'
-require 'fabricator'
+require 'fabrication'
 require 'persistence'
 
 spec_root = File.dirname(__FILE__)

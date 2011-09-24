@@ -7,6 +7,7 @@ describe Persistence::Save do
   let(:persistence) do
     Class.new do
       extend Persistence::Base
+      extend Persistence::Load
       extend Persistence::Save
     end
   end
@@ -14,23 +15,41 @@ describe Persistence::Save do
   describe '#save' do
 
     let(:adapter) { double('Adapter') }
+    let(:object_class) do
+      Class.new do
+        attr_accessor :id
+        attr_accessor :name
+        attr_accessor :author
+        def to_resource
+          { "title" => @name, "author" => @author }
+        end
+      end
+    end
 
     before do
       persistence.stub(:adapter).and_return(adapter)
     end
 
-    context 'object with #to_resource method' do
+    context 'not given any parameter - global save' do
 
-      let(:object_class) do
-        Class.new do
-          attr_accessor :id
-          attr_accessor :name
-          attr_accessor :author
-          def to_resource
-            { "title" => @name, "author" => @author }
-          end
+      let(:ids)     { 3.times.map { BSON::ObjectId.new } }
+      let(:objects) { 3.times.map { object_class.new } }
+
+      before do
+        ids.each_with_index do |id, i|
+          persistence.identity_map[id] = objects[i]
         end
       end
+
+      it "persists each object" do
+        adapter.should_receive(:insert_resource).exactly(3).times
+        persistence.save
+      end
+
+    end
+
+    context 'given object with #to_resource method' do
+
       let(:id)     { BSON::ObjectId.new }
       let(:object) { object_class.new }
 
@@ -109,7 +128,7 @@ describe Persistence::Save do
 
     end
 
-    context 'object without #to_resource method' do
+    context 'given object without #to_resource method' do
 
       let(:object_class) do
         Class.new do
