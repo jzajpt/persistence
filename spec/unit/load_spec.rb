@@ -63,7 +63,7 @@ describe Persistence::Load do
 
         it 'appends object to identity_map' do
           object = persistence.load(id)
-          persistence.identity_map[id].should eq(object)
+          Persistence.identity_map[id].should eq(object)
         end
 
       end

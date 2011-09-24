@@ -25,7 +25,7 @@ module Persistence
     # Handles unknown method calls.
     #
     # @param [Symbol] method Method name
-    def method_missing(method)
+    def method_missing(method, *args)
       begin
         class_name = method.to_s.classify
         klass = class_name.constantize

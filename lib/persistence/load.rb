@@ -52,9 +52,7 @@ module Persistence
     def materialize(id, hash)
       type = hash.delete '_type'
       return unless type
-      Factory.new(type, hash).tap do |object|
-        self.identity_map[id] = object
-      end
+      Factory.new(type, hash)
     end
 
     # Tries to load given resource from identity map or

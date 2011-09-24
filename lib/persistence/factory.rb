@@ -12,6 +12,7 @@ module Persistence
       klass = klass.respond_to?(:constantize) ? klass.constantize : klass
       klass.new.tap do |object|
         self.assign object, attributes
+        Persistence.identity_map[object.id] = object
       end
     end
 
@@ -21,8 +22,10 @@ module Persistence
     # @param [Hash] hash Resource hash from database
     # @return [Object] Domain object
     def self.assign(object, resource)
-      resource_id = resource.delete('_id')
-      object.instance_variable_set :"@id", resource_id if resource_id
+      resource_id = resource.delete('_id') ||
+                    resource.delete(:id) ||
+                    BSON::ObjectId.new
+      object.instance_variable_set :"@id", resource_id
       resource.each do |key, value|
         var_name = :"@#{key}"
         object.instance_variable_set var_name, value
