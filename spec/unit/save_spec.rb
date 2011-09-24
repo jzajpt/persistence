@@ -68,6 +68,15 @@ describe Persistence::Save do
           }.should change(object, :id).to(id)
         end
 
+        context "given a hash" do
+
+          it "sets new ID on hash" do
+            hash = persistence.save({})
+            hash[:id].should be_kind_of(BSON::ObjectId)
+          end
+
+        end
+
       end
 
       context "already persisted" do

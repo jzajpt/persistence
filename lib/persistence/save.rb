@@ -35,7 +35,11 @@ module Persistence
     def persist_new(object)
       resource = self.object_to_resource(object)
       new_id = self.adapter.insert_resource(resource)
-      object.id = new_id
+      if object.is_a?(Hash)
+        object[:id] = new_id
+      else
+        object.id = new_id
+      end
       object
     end
 
