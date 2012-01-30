@@ -66,7 +66,7 @@ describe Persistence::Mapper::Iterator do
 
     before do
       Persistence::ObjectFactory.stub(:new).and_return object_factory
-      iterator.stub(:adapter).and_return adapter
+      iterator.stub(:collection_adapter).and_return adapter
     end
 
     context 'with criteria defined' do
@@ -144,7 +144,7 @@ describe Persistence::Mapper::Iterator do
 
     before do
       Persistence::ObjectFactory.stub(:new).and_return object_factory
-      iterator.stub(:adapter).and_return adapter
+      iterator.stub(:collection_adapter).and_return adapter
       adapter.stub(:find_one).and_return resource
       iterator.criteria = criteria
       iterator.options = options

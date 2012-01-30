@@ -1,8 +1,11 @@
 # encoding: utf-8
 
+require 'persistence/adapters/mongo'
+require 'persistence/adapters/grid_fs'
+
 module Persistence
   class Core
-    attr_accessor :adapter
+    attr_accessor :database_adapter
     attr_accessor :file_adapter
 
     # Initializes persitence core
@@ -17,7 +20,7 @@ module Persistence
     end
 
     def register_mapper(key, mapper_class)
-      mapper_instance = mapper_class.new(@adapter, @file_adapter)
+      mapper_instance = mapper_class.new(@database_adapter, @file_adapter)
       mapper_class.instance = mapper_instance
       @mappers[key] = mapper_instance
     end
@@ -29,8 +32,9 @@ module Persistence
     protected
 
     def init_adapters(options = {})
-      @adapter = Adapters::Mongo.new(options)
-      @file_adapter = Adapters::GridFs.new(database: @adapter.database)
+      @database_adapter = Adapters::Mongo.new(options)
+      @database_adapter.connect
+      @file_adapter = Adapters::GridFs.new(database: @database_adapter.database)
     end
   end
 end

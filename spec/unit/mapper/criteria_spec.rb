@@ -10,7 +10,7 @@ describe Persistence::Mapper::Criteria do
   let(:persistence) do
     Class.new do
       extend Persistence::Mapper::Criteria
-      cattr_accessor :adapter
+      cattr_accessor :collection_adapter
     end
   end
 

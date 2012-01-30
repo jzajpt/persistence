@@ -4,16 +4,16 @@ require 'spec_helper'
 
 describe Persistence::Adapters::GridFs do
 
-  let(:db_adapter) { Persistence::Adapters::Mongo.new host: 'localhost',
-                      database: 'persistence_test', collection: 'persistence_test' }
+  let(:db_adapter) { Persistence::Adapters::Mongo.new host: 'localhost', database_name: 'persistence_test' }
   let(:adapter)    { Persistence::Adapters::GridFs.new(database: db_adapter.database) }
   let(:db)         { adapter.database }
   let(:original_file) { File.new(File.join(File.dirname(__FILE__), '/../fixtures/file.txt')) }
 
+  before do
+    db_adapter.connect
+  end
+
   describe "#push_file" do
-
-
-
     it "returns an id of created file" do
       new_id = adapter.push_file(original_file, 'file.txt')
       new_id.should be_kind_of(BSON::ObjectId)

@@ -19,7 +19,7 @@ describe Persistence::Mapper::Destroy do
     let(:id)      { BSON::ObjectId.new }
 
     before do
-      persistence.stub(:adapter).and_return(adapter)
+      persistence.stub(:collection_adapter).and_return(adapter)
       persistence.stub(:find)
     end
 

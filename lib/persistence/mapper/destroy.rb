@@ -9,7 +9,7 @@ module Persistence
       def destroy(id)
         object = self.find id
         object && run_observers(:destroy, object) do
-          self.adapter.destroy_resource(id)
+          self.collection_adapter.destroy_resource(id)
         end
       end
     end

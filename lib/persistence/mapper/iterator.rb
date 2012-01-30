@@ -8,14 +8,14 @@ module Persistence
       include ::Enumerable
       include Criteria
 
-      attr_accessor :adapter
+      attr_accessor :collection_adapter
 
       # Initializes iterator class.
       #
       # @param [Hash] criteria Criteria
       # @param [Hash] options Options
-      def initialize(adapter, criteria = nil, options = nil)
-        @adapter = adapter
+      def initialize(collection_adapter, criteria = nil, options = nil)
+        @collection_adapter = collection_adapter
         @criteria = criteria || {}
         @options = options || {}
       end
@@ -40,7 +40,7 @@ module Persistence
       #
       # @return [Array] Iterator objects
       def to_a
-        resources = self.adapter.find(criteria, safe_options)
+        resources = self.collection_adapter.find(criteria, safe_options)
         resources.map do |hash|
           ObjectFactory.new(hash).materialize
         end.compact
@@ -50,7 +50,7 @@ module Persistence
       #
       # @return [Object] First objects
       def first
-        hash = self.adapter.find_one criteria, safe_options
+        hash = self.collection_adapter.find_one criteria, safe_options
         ObjectFactory.new(hash).materialize if hash
       end
 

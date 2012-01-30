@@ -27,7 +27,7 @@ describe Persistence::Mapper::Save do
     let(:id) { BSON::ObjectId.new }
 
     before do
-      persistence.stub(:adapter).and_return(adapter)
+      persistence.stub(:collection_adapter).and_return(adapter)
       object_class.stub(:name).and_return(:object_class)
     end
 

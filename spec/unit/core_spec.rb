@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe Persistence::Core do
   let(:database) { mock "Mongo::Database" }
-  let(:mongo_adapter) { mock Persistence::Adapters::Mongo, database: database }
+  let(:mongo_adapter) { mock Persistence::Adapters::Mongo, database: database, connect: nil }
   let(:gridfs_adapter) { mock Persistence::Adapters::GridFs }
 
   before do
@@ -18,6 +18,11 @@ describe Persistence::Core do
 
     it 'creates Mongo adapter' do
       Persistence::Adapters::Mongo.should_receive(:new).with(options)
+      mapper
+    end
+
+    it 'connects Mongo adapter' do
+      mongo_adapter.should_receive :connect
       mapper
     end
 

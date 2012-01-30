@@ -1,8 +1,7 @@
 # encoding: utf-8
 
 require 'singleton'
-require 'persistence/adapters/mongo'
-require 'persistence/adapters/grid_fs'
+require 'persistence/adapters/mongo_collection_adapter'
 require 'persistence/mapper/criteria'
 require 'persistence/mapper/destroy'
 require 'persistence/mapper/files'
@@ -20,13 +19,21 @@ module Persistence
     include Criteria
     include Observers
 
-    attr_accessor :adapter
+    attr_accessor :database_adapter
+    attr_accessor :collection_adapter
     attr_accessor :file_adapter
 
     # Initialize mapper instance
-    def initialize(adapter, file_adapter = nil)
-      @adapter = adapter
+    def initialize(database_adapter, file_adapter = nil)
+      @database_adapter = database_adapter
       @file_adapter = file_adapter
+      @collection_adapter = Adapters::MongoCollectionAdapter.new database_adapter, collection_name
+    end
+
+    def collection_name
+      class_name = self.class.name
+      resource = class_name.match(/^(.+)Mapper$/)[1]
+      resource.downcase.pluralize if resource
     end
 
     class << self

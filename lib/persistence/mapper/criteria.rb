@@ -24,7 +24,7 @@ module Persistence
         if criteria.respond_to?(:to_hash) || class_or_criteria.respond_to?(:to_hash)
           new_criteria = new_criteria.merge(criteria || class_or_criteria)
         end
-        Iterator.new(self.adapter, new_criteria, options)
+        Iterator.new(self.collection_adapter, new_criteria, options)
       end
 
       # @param [Array] fields Array of fields
@@ -50,7 +50,7 @@ module Persistence
         else
           new_options[:sort] = [order]
         end
-        Iterator.new(self.adapter, criteria, new_options)
+        Iterator.new(self.collection_adapter, criteria, new_options)
       end
 
       # Handles unknown method calls.
@@ -76,7 +76,7 @@ module Persistence
         else
           new_options[:fields] = fields
         end
-        Iterator.new(self.adapter, criteria, new_options)
+        Iterator.new(self.collection_adapter, criteria, new_options)
       end
     end
   end

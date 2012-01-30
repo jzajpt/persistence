@@ -30,7 +30,7 @@ module Persistence
         self.timestamp_create object
         self.timestamp_update object
         resource = self.object_to_resource(object)
-        new_id = self.adapter.insert_resource(resource)
+        new_id = self.collection_adapter.insert_resource(resource)
         object.id = new_id
         object.instance_variable_set :@type, object.class.name.to_s
         object
@@ -43,7 +43,7 @@ module Persistence
       def persist_existing(object)
         self.timestamp_update object
         resource = self.object_to_resource(object)
-        self.adapter.update_resource(object.id, resource)
+        self.collection_adapter.update_resource(object.id, resource)
         object
       end
 

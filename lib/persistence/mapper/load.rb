@@ -17,7 +17,7 @@ module Persistence
       #
       # @return [Array] The array with learning objects.
       def all
-        self.adapter.resources.map do |hash|
+        self.collection_adapter.resources.map do |hash|
           ObjectFactory.new(hash).materialize
         end.compact
       end

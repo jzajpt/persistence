@@ -23,7 +23,7 @@ describe Persistence::Mapper::Load do
     let(:iterator)       { double('Iterator').as_null_object }
 
     before do
-      persistence.stub(:adapter).and_return(adapter)
+      persistence.stub(:collection_adapter).and_return(adapter)
       persistence.stub(:select).and_return iterator
     end
 
@@ -56,7 +56,7 @@ describe Persistence::Mapper::Load do
 
     before do
       adapter.stub(:resources) { persisted_hashes }
-      persistence.stub(:adapter) { adapter }
+      persistence.stub(:collection_adapter) { adapter }
       PersistenceTestObject.stub(:new).and_return instance
       Persistence::ObjectFactory.stub(:new).and_return object_factory
     end

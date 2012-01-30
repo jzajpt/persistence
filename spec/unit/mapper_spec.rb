@@ -3,26 +3,41 @@
 require 'spec_helper'
 
 describe Persistence::Mapper do
+  let(:options) { {} }
+  let(:mapper) { Persistence::Mapper.new mongo_adapter, gridfs_adapter }
+  let(:database) { mock "Mongo::Database" }
+  let(:mongo_adapter) { mock Persistence::Adapters::Mongo, database: database }
+  let(:gridfs_adapter) { mock Persistence::Adapters::GridFs }
+
   describe '#new' do
-    let(:options) { {} }
-    let(:mapper) { Persistence::Mapper.new mongo_adapter, gridfs_adapter }
-    let(:database) { mock "Mongo::Database" }
-    let(:mongo_adapter) { mock Persistence::Adapters::Mongo, database: database }
-    let(:gridfs_adapter) { mock Persistence::Adapters::GridFs }
+    let(:collection_adapter) { mock Persistence::Adapters::MongoCollectionAdapter }
 
     before do
-      Persistence::Adapters::Mongo.stub(:new).and_return mongo_adapter
-      Persistence::Adapters::GridFs.stub(:new).and_return gridfs_adapter
+      Persistence::Adapters::MongoCollectionAdapter.stub(:new).and_return collection_adapter
     end
 
-    it 'creates Mongo adapter' do
+    it 'stores Mongo adapter' do
       mapper
-      mapper.adapter.should eq mongo_adapter
+      mapper.database_adapter.should eq mongo_adapter
     end
 
-    it 'creates GridFs adapter' do
+    it 'stores GridFs adapter' do
       mapper
       mapper.file_adapter.should eq gridfs_adapter
+    end
+
+    it 'creates mongo collection adapter' do
+      Persistence::Mapper.stub(:name).and_return 'UserMapper'
+      Persistence::Adapters::MongoCollectionAdapter.should_receive(:new).with mongo_adapter, 'users'
+      mapper
+      mapper.collection_adapter.should eq collection_adapter
+    end
+  end
+
+  describe '#collection_name' do
+    it 'figures out name from class name' do
+      mapper.class.stub(:name).and_return "UserMapper"
+      mapper.collection_name.should eq "users"
     end
   end
 
