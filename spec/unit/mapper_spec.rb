@@ -6,8 +6,8 @@ describe Persistence::Mapper do
   let(:options) { {} }
   let(:mapper) { Persistence::Mapper.new mongo_adapter, gridfs_adapter }
   let(:database) { mock "Mongo::Database" }
-  let(:mongo_adapter) { mock Persistence::Adapters::Mongo, database: database }
-  let(:gridfs_adapter) { mock Persistence::Adapters::GridFs }
+  let(:mongo_adapter) { mock Persistence::Adapters::MongoDatabaseAdapter, database: database }
+  let(:gridfs_adapter) { mock Persistence::Adapters::GridFsAdapter }
 
   describe '#new' do
     let(:collection_adapter) { mock Persistence::Adapters::MongoCollectionAdapter }
@@ -21,7 +21,7 @@ describe Persistence::Mapper do
       mapper.database_adapter.should eq mongo_adapter
     end
 
-    it 'stores GridFs adapter' do
+    it 'stores GridFsAdapter adapter' do
       mapper
       mapper.file_adapter.should eq gridfs_adapter
     end

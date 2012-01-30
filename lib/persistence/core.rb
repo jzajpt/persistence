@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require 'persistence/adapters/mongo'
-require 'persistence/adapters/grid_fs'
+require 'persistence/adapters/mongo_database_adapter'
+require 'persistence/adapters/grid_fs_adapter'
 
 module Persistence
   class Core
@@ -32,9 +32,9 @@ module Persistence
     protected
 
     def init_adapters(options = {})
-      @database_adapter = Adapters::Mongo.new(options)
+      @database_adapter = Adapters::MongoDatabaseAdapter.new(options)
       @database_adapter.connect
-      @file_adapter = Adapters::GridFs.new(database: @database_adapter.database)
+      @file_adapter = Adapters::GridFsAdapter.new(database: @database_adapter.database)
     end
   end
 end

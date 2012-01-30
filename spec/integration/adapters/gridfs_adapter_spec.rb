@@ -2,12 +2,12 @@
 
 require 'spec_helper'
 
-describe Persistence::Adapters::GridFs do
+describe Persistence::Adapters::GridFsAdapter do
 
-  let(:db_adapter) { Persistence::Adapters::Mongo.new host: 'localhost', database_name: 'persistence_test' }
-  let(:adapter)    { Persistence::Adapters::GridFs.new(database: db_adapter.database) }
+  let(:db_adapter) { Persistence::Adapters::MongoDatabaseAdapter.new host: 'localhost', database_name: 'persistence_test' }
+  let(:adapter)    { Persistence::Adapters::GridFsAdapter.new(database: db_adapter.database) }
   let(:db)         { adapter.database }
-  let(:original_file) { File.new(File.join(File.dirname(__FILE__), '/../fixtures/file.txt')) }
+  let(:original_file) { File.new(File.join(File.dirname(__FILE__), '/../../fixtures/file.txt')) }
 
   before do
     db_adapter.connect

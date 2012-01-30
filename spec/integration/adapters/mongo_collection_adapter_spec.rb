@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Persistence::Adapters::MongoCollectionAdapter do
 
   let(:options)            { { host: 'localhost', database_name: 'persistence_test' } }
-  let(:database_adapter)   { Persistence::Adapters::Mongo.new options }
+  let(:database_adapter)   { Persistence::Adapters::MongoDatabaseAdapter.new options }
   let(:collection_adapter) { Persistence::Adapters::MongoCollectionAdapter.new database_adapter, 'test_coll' }
   let(:db)                 { database_adapter.database }
   let(:coll)               { collection_adapter.collection }

@@ -4,7 +4,7 @@ require 'persistence/adapters/abstract_database_adapter'
 
 module Persistence
   module Adapters
-    class Mongo < AbstractDatabaseAdapter
+    class MongoDatabaseAdapter < AbstractDatabaseAdapter
       attr_accessor :host
       attr_accessor :port
       attr_accessor :database_name

@@ -9,7 +9,7 @@ module Persistence
     # GridFS filesystem adapter. Stores and loads files.
     #
     # @author Jiri Zajpt
-    class GridFs
+    class GridFsAdapter
 
       attr_accessor :database
       attr_accessor :grid

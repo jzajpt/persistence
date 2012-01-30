@@ -4,12 +4,12 @@ require 'spec_helper'
 
 describe Persistence::Core do
   let(:database) { mock "Mongo::Database" }
-  let(:mongo_adapter) { mock Persistence::Adapters::Mongo, database: database, connect: nil }
-  let(:gridfs_adapter) { mock Persistence::Adapters::GridFs }
+  let(:mongo_adapter) { mock Persistence::Adapters::MongoDatabaseAdapter, database: database, connect: nil }
+  let(:gridfs_adapter) { mock Persistence::Adapters::GridFsAdapter }
 
   before do
-    Persistence::Adapters::Mongo.stub(:new).and_return mongo_adapter
-    Persistence::Adapters::GridFs.stub(:new).and_return gridfs_adapter
+    Persistence::Adapters::MongoDatabaseAdapter.stub(:new).and_return mongo_adapter
+    Persistence::Adapters::GridFsAdapter.stub(:new).and_return gridfs_adapter
   end
 
   describe '#initialize' do
@@ -17,7 +17,7 @@ describe Persistence::Core do
     let(:mapper) { Persistence::Core.new(options) }
 
     it 'creates Mongo adapter' do
-      Persistence::Adapters::Mongo.should_receive(:new).with(options)
+      Persistence::Adapters::MongoDatabaseAdapter.should_receive(:new).with(options)
       mapper
     end
 
@@ -27,7 +27,7 @@ describe Persistence::Core do
     end
 
     it 'creates GridFs adapter' do
-      Persistence::Adapters::GridFs.should_receive(:new).with(database: database)
+      Persistence::Adapters::GridFsAdapter.should_receive(:new).with(database: database)
       mapper
     end
   end
