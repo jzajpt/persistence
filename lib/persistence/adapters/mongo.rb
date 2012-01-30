@@ -15,11 +15,13 @@ module Persistence
       # Initializes adapter with given options.
       #
       # @param [Hash] options Options hash
-      # @option options [String] :host Host
+      # @option options [String] :host MongoDB host
+      # @option options [String] :port MongoDB port
       # @option options [String] :database Database name
       # @option options [String] :collection Collection name
+      # @option options [String] :logger Logger
       def initialize(options = {})
-        @connection = ::Mongo::Connection.new(options[:host])
+        @connection = ::Mongo::Connection.new(options[:host], options[:port], logger: options[:logger])
         @database = @connection.db(options[:database])
         self.collection(options[:collection]) if options[:collection]
       end
@@ -28,27 +30,40 @@ module Persistence
       #
       # @param [String, BSON::ObjectId] id The ID of document to return
       # @return [Hash] A hash of given document
-      def resource(id = nil)
-        self.normalize(collection.find_one(self.to_id(id)))
+      def resource(id = nil, options = {})
+        self.normalize(collection.find_one(self.to_id(id), options))
       end
 
       # Returns all persisted documents
       #
       # @return [Array] Array of persisted hashes
       def resources
-        self.collection.find.map do |hash|
+        self.collection.find({}, :sort => [:_id, :asc]).map do |hash|
           self.normalize hash
         end
       end
 
       # Returns persisted documents matching to given criteria.
       #
-      # @param [Hash] Criteria
+      # @param [Hash] criteria Criteria
+      # @param [Hash] options Options
       # @return [Array] Array of matched hashes
-      def find(criteria)
-        self.collection.find(criteria).map do |hash|
+      def find(criteria, options = {})
+        criteria = normalize_criteria criteria
+        self.collection.find(criteria, options).map do |hash|
           self.normalize hash
         end
+      end
+
+      # Returns first persisted document matching to given criteria.
+      #
+      # @param [Hash] criteria Criteria
+      # @param [Hash] options Options
+      # @return [Hash] First matched document
+      def find_one(criteria, options = {})
+        criteria = normalize_criteria criteria
+        hash = self.collection.find_one(criteria, options)
+        self.normalize(hash) if hash
       end
 
       # Inserts a new object into collection
@@ -58,15 +73,31 @@ module Persistence
         self.collection.insert(doc)
       end
 
-      # Updates existing object with new one
+      # Replaces existing object with new one.
       #
       # @param [String, BSON::ObjectId] id The ID of resource
       # @param [Hash] new_doc New hash to persist
       # @return [BSON::ObjectId, nil] ID of updated resource or nil
-      def update_resource(id, new_doc)
+      def replace_resource(id, new_doc)
         id = self.to_id(id)
         result = self.collection.update({ _id: id }, new_doc, safe: true)
-        if self.update_result_ok? result
+        if self.update_result_ok?(result)
+          id
+        else
+          nil
+        end
+      end
+
+      # Updates existing object keys and values from given hash.
+      #
+      # @param [String, BSON::ObjectId] id The ID of resource
+      # @param [Hash] new_doc New hash to set
+      # @return [BSON::ObjectId, nil] ID of updated resource or nil
+      def update_resource(id, new_doc)
+        id = self.to_id(id)
+        document = { "$set" => new_doc.except("_id", :_id) }
+        result = self.collection.update({ _id: id }, document, safe: true)
+        if self.update_result_ok?(result)
           id
         else
           nil
@@ -97,12 +128,23 @@ module Persistence
 
       protected
 
-      # Normalizes hash from Mongo
+      # Normalizes hash from Mongo driver.
       #
       # @param [Hash] hash Hash to normalize
       # @return [Hash] Normalized hash
       def normalize(hash)
         hash.symbolize_keys if hash
+      end
+
+      # Normalizes criteria hash
+      #
+      # @param [Hash] criteria_hash Criteria hash to normalize
+      # @return [Hash] Normalized hash
+      def normalize_criteria(criteria_hash)
+        if criteria_hash[:_id].present?
+          criteria_hash[:_id] = to_id criteria_hash[:_id]
+        end
+        criteria_hash
       end
 
       # Checks if update result hash returned error or not.
@@ -128,6 +170,13 @@ module Persistence
       # @return [BSON::ObjectId]
       def to_id(id)
         id.kind_of?(BSON::ObjectId) ? id : BSON::ObjectId(id)
+      end
+
+      # Returns logger instance for mongo connection.
+      #
+      # @return [Logger] Logger instance
+      def logger
+        @_logger ||= Rails.logger
       end
 
     end

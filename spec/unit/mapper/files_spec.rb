@@ -3,14 +3,15 @@
 
 require 'spec_helper'
 
-describe Persistence::Files do
+describe Persistence::Mapper::Files do
 
-  let(:persistence) do
+  let(:persistence_class) do
     Class.new do
-      extend Persistence::Base
-      extend Persistence::Files
+      include Persistence::Mapper::Files
+      attr_accessor :file_adapter
     end
   end
+  let(:persistence) { persistence_class.new }
   let(:file_adapter) { double('FileAdapter', push_file: nil, get_file: nil) }
 
   describe '#push_file' do

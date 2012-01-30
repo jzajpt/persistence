@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "persistence/version"
 
 Gem::Specification.new do |s|
-  s.name        = "Persistence"
+  s.name        = "persistence"
   s.version     = Persistence::VERSION
   s.authors     = ["Jiří Zajpt"]
   s.email       = ["jzajpt@blueberry.cz"]
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mime-types'
   s.add_dependency "activesupport", ">= 3.1.0"
   s.add_development_dependency "fabricator"
-  s.add_development_dependency "rspec", "~> 2.6.0"
+  s.add_development_dependency "rspec", "~> 2.8.0"
   s.add_development_dependency "rake", "~> 0.9.0"
   s.add_development_dependency "rack"
 end

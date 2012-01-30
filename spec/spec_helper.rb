@@ -10,9 +10,9 @@ spec_root = File.dirname(__FILE__)
 # in spec/support/ and its subdirectories.
 Dir[File.join(spec_root, "/support/**/*.rb")].each {|f| require f}
 
-Persistence.init_persistence(host: 'localhost',
-                             database: 'persistence_test',
-                             collection: 'persistence_test')
+#Persistence.init_persistence(host: 'localhost',
+                             #database: 'persistence_test',
+                             #collection: 'persistence_test')
 
 RSpec.configure do |config|
   config.before(:each) do
