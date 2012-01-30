@@ -33,7 +33,7 @@ module Persistence
     def collection_name
       class_name = self.class.name
       resource = class_name.match(/^(.+)Mapper$/)[1]
-      resource.downcase.pluralize if resource
+      resource.tableize if resource
     end
 
     class << self
