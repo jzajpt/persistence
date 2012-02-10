@@ -13,6 +13,13 @@ module Persistence
         iterator.first
       end
 
+      # Returns the first object from collection.
+      #
+      # @param [Object] Materialized object
+      def first
+        Iterator.new(self.collection_adapter).first
+      end
+
       # Returns the array with all learning objects.
       #
       # @return [Array] The array with learning objects.
