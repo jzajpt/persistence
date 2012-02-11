@@ -6,7 +6,6 @@ class CriteriaTestClass
 end
 
 describe Persistence::Mapper::Criteria do
-
   let(:persistence) do
     Class.new do
       extend Persistence::Mapper::Criteria
@@ -62,34 +61,6 @@ describe Persistence::Mapper::Criteria do
           iterator.criteria.should eq(foo: 'newbar')
         end
 
-      end
-
-    end
-
-    context 'with class argument' do
-
-      let(:iterator) { persistence.select(CriteriaTestClass) }
-
-      it 'returns Persistence::Mapper::Iterator' do
-        iterator.should be_kind_of(Persistence::Mapper::Iterator)
-      end
-
-      it 'returns iterator with conditions hash - _type' do
-        iterator.criteria.should eq(_type: 'CriteriaTestClass')
-      end
-
-    end
-
-    context 'with class argument and hash conditions' do
-
-      let(:iterator) { persistence.select(CriteriaTestClass, said: 'ohai') }
-
-      it 'returns Persistence::Mapper::Iterator' do
-        iterator.should be_kind_of(Persistence::Mapper::Iterator)
-      end
-
-      it 'returns iterator with merged conditions' do
-        iterator.criteria.should eq(_type: 'CriteriaTestClass', said: 'ohai')
       end
 
     end
@@ -185,32 +156,5 @@ describe Persistence::Mapper::Criteria do
       end
     end
   end
-
-  describe '#method_missing' do
-
-    context 'given snake-cased valid class name' do
-
-      let(:iterator) { persistence.criteria_test_classes }
-
-      it 'returns Persistence::Mapper::Iterator' do
-        iterator.should be_kind_of(Persistence::Mapper::Iterator)
-      end
-
-      it 'adds a condition for _type field from method name' do
-        iterator.criteria.should eq(_type: 'CriteriaTestClass')
-      end
-
-    end
-
-    context 'given non-existing class name' do
-
-      it 'raises NoMethodError' do
-        expect { persistence.invalid_persons }.to raise_error(NoMethodError)
-      end
-
-    end
-
-  end
-
 end
 
